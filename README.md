@@ -42,21 +42,24 @@ Similarly, it is not 3NF compliant because there are non-key fields about other 
 
 I made separate tables with separate IDs and data in order to account for non-key fields, making sure that every non-key is a fact about the key field. I think it is logical to separate the tables in this way below. Based on the original table, I found it confusing that the assignment_id/due_date/classroom existed without a variable that accounted for the specific section of the class. Especially with the amount of assumptions regarding varying sections of the same course taught by one professor, various professors teaching many various sections, etc. This is clearly important information and it makes sense to add a variable to account for sections, hence the creation of section_id. In turn this will make this table 4NF compliant and more easy to understand.
 
-| assignment_id | student_id | grade |
-| :------------ | :--------- | :----- |
-| ...          | ...        | ...   |
+| section_id   | classroom   | professor      | professor_email |
+| :------------ | :--------- | :-----         | :---------      |
+| ...          | ...        | ...            | ...            |
 
 | section_id   | assignment_id | due_date |
 | :------------ | :--------- | :----- |
 | ...          | ...        | ...     |
 
+
 | assignment_id   | assignment_topic | relevant_reading |
 | :------------ | :--------- | :----- |
 | ...          | ...        | ...               |
 
-| section_id   | classroom   | professor      | professor_email |
-| :------------ | :--------- | :-----         | :---------      |
-| ...          | ...        | ...            | ...            |
+| assignment_id | student_id | grade |
+| :------------ | :--------- | :----- |
+| ...          | ...        | ...   |
+
+
 
 
 
