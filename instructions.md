@@ -1,5 +1,6 @@
 # Data Normalization and Entity-Relationship Diagramming
 
+## Original Table
 The following table, representing students' grades in courses at a university, is already in [first normal form](https://knowledge.kitchen/A_Simple_Guide_to_Five_Normal_Forms_in_Relational_Database_Theory#FIRST_NORMAL_FORM) (1NF) - all records have the same number of fields, and there is only one value per field.
 
 | assignment_id | student_id | due_date | professor | assignment_topic                | classroom | grade | relevant_reading    | professor_email   |
@@ -29,40 +30,43 @@ Further assumptions:
 
 - Assume there are many rows of data following this structure... only 5 sample rows have been shown for brevity. The number of rows is not important to this assignment.
 
-## Requirements
 
-### Convert to 4NF
+### Convert to 4NF: Existing Issues
 
-Convert this table to the [fourth normal form](https://knowledge.kitchen/A_Simple_Guide_to_Five_Normal_Forms_in_Relational_Database_Theory#Fourth_Normal_Form) (4NF) using the techniques we have learned in this class.
+This data set has many issues. There are non-key fields that only correlate to a cetain aspect of the whole key. To articulate this better, take this for example: assignment_topic, relevant_reading, and due_date all depend on/are facts only about assignment_id, not student_id. In this way, it is not 2NF compliant.
 
-Notes:
+Similarly, it is not 3NF compliant because there are non-key fields about other non-key fields. professor_email and classroom depend on professor, and are only facts about the professor with different emails and classrooms.
 
-- There is no indication of which field is the primary key.
-- Use your own judgment as to which fields might be good candidate key(s).
-- Feel free to add any additional "surrogate key" fields you believe are necessary to make this data 4NF-compliant.
+
+## Making the Data 4NF Compliant
+
+I made separate tables with separate IDs and data in order to account for non-key fields, making sure that every non-key is a fact about the key field. I think it is logical to separate the tables in this way below. Based on the original table, I found it confusing that the assignment_id/due_date/classroom existed without a variable that accounted for the specific section of the class. Especially with the amount of assumptions regarding varying sections of the same course taught by one professor, various professors teaching many various sections, etc. This is clearly important information and it makes sense to add a variable to account for sections, hence the creation of section_id. In turn this will make this table 4NF compliant and more easy to understand.
+
+| assignment_id | student_id | grade |
+| :------------ | :--------- | :----- |
+| ...          | ...        | ...   |
+
+| section_id   | assignment_id | due_date |
+| :------------ | :--------- | :----- |
+| ...          | ...        | ...     |
+
+| assignment_id   | assignment_topic | relevant_reading |
+| :------------ | :--------- | :----- |
+| ...          | ...        | ...               |
+
+| section_id   | classroom   | professor      | professor_email |
+| :------------ | :--------- | :-----         | :---------      |
+| ...          | ...        | ...            | ...            |
+
+
+
+This ensures that our data does not contain more than one multi-valued fact about an entity in the same table.
+
+
 
 ### Draw an Entity-Relationship Diagram
 
-Draw an Entity-Relationship Diagram(s) of your 4NF-compliant data tables. Use the tool, [draw.io](https://draw.io) (also known as diagrams.net) to create these diagrams. A [sample .drawio file](./images/example-er-diagrams.drawio) has been included in this repository for example.
+ My [diagram](./images/diagram.svg).
 
-- export the diagram(s) in SVG format into the directory named `images`.
-- publish the diagram(s) to your report, as described below.
 
-### Write a report
 
-Write a wonderfully-formatted Markdown report in the file named `README.md`. Make sure your document renders nicely as a web page, with clear headings, sub-headings, and text. Include a full description of your solution explaining what about the original data set was not 4NF compliant and what changes you made to make it 4NF-compliant. Be specific, and include at a minimum:
-
-- a table containing the original data set (research how to write tables in Markdown or simply see the example table in this document's source code)
-- your description of what makes this data set not compliant with 4NF
-- tables containing the 4NF-compliant version of the data set
-- the ER diagram(s) you created of your 4NF-compliant version of the data set (this diagram must be visible on the `README.md` document, not simply linked from there - research how to publish images to your pages in Markdown or simply see the example image in this document's source code)
-- your description of what changes you made and how these changes make the data 4NF-compliant
-
-## Submit your work
-
-Each student must submit this assignment individually. Use Visual Studio Code to perform git `stage`, `commit` and `push` actions to submit. These actions are all available as menu items in Visual Studio Code's Source Control panel.
-
-1. Type a short note about what you have done to the files in the `Message` area, and then type `Command-Enter` (Mac) or `Control-Enter` (Windows) to perform git `stage` and `commit` actions.
-1. Click the `...` icon next to the words, "Source Control" and select "Push" to perform the git `push` action. This will upload your work to your repository on GitHub.com.
-
-![Pushing work in Visual Studio Code](./images/vscode_stage_commit_push.png)
